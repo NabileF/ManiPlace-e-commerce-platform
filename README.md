@@ -48,3 +48,40 @@ To ensure smooth integration between GitHub and Jira, please follow these guidel
 - Commit Message: `MAN-2: Implement feature XYZ`
 
 Please adhere to these guidelines to ensure accurate tracking of development work in Jira.
+
+----------------------------------------------------------------------
+
+
+## Branching Structure Guide
+
+This repository follows a branching structure designed to facilitate collaboration and code management for our team of three working on the project. Below is an overview of the branches and their purposes:
+
+### Master Branch:
+- **Purpose:** The main branch containing stable and deployable production code.
+- **Deployment:** Deployments to production environments are made from this branch.
+
+### Develop Branch:
+- **Purpose:** Common development branch where ongoing feature development is merged for continuous integration.
+- **Testing:** Integration and validation tests are performed from this branch.
+
+### Feature Branches:
+- **Naming Convention:** `feature/feature-name`
+- **Purpose:** Individual branches created by team members from `develop` for working on specific features.
+- **Example:** `feature/login-page` for developing a login page feature.
+- **Integration:** Once a feature is complete and tested, it is merged into `develop` for integration.
+
+### Bugfix Branches:
+- **Naming Convention:** `bugfix/issue-name`
+- **Purpose:** Branches created by team members from `develop` for fixing bugs.
+- **Example:** `bugfix/user-authentication` for fixing a user authentication issue.
+- **Integration:** After fixing the bug and testing, the bugfix branch is merged into `develop` for integration.
+
+### Release Branches (Optional):
+- **Naming Convention:** `release/version`
+- **Purpose:** Optional branches created from `develop` to prepare a specific version for deployment.
+- **Testing:** Final testing and adjustments are made in this branch before merging into `master` for production deployment.
+
+This branching structure aims to ensure efficient management of features, bug fixes, and versions while maintaining a stable main branch for deployment. Clear policies on branch creation, merging, and cleanup help maintain order and consistency in the Git repository.
+
+---
+
