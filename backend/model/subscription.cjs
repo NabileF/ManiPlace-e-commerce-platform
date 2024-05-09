@@ -1,7 +1,7 @@
 const mongoose = require('mongoose');
 
 const subscriptionPlanSchema = new mongoose.Schema({
-  planId: { type: String, required: true },
+  planId: { type: mongoose.Schema.Types.ObjectId, ref: "plan",required: true },
   name: { type: String, required: true },
   features: [{ type: String }],
   price: { type: Number, required: true }, 
