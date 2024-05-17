@@ -4,6 +4,11 @@ const mongoose = require("mongoose");
 const SubscriptionPlan = require("./models/SubscriptionPlan");
 const { supplierRoutes } = require("./routes/supplierRoutes");
 //const { bodyParser } = require("body-parser");
+// app.js
+const express = require('express');
+const mongoose = require('mongoose');
+const bodyParser = require('body-parser');
+const session = require('express-session');
 
 const app = express();
 //app.use(bodyParser.json());
