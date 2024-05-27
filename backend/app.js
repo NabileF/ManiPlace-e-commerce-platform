@@ -1,16 +1,19 @@
 const express = require("express");
 const { PORT, mondoDBURL } = require("./config");
 const mongoose = require("mongoose");
-const SubscriptionPlan = require("./models/SubscriptionPlan");
-const { supplierRoutes } = require("./routes/supplierRoutes");
+const SubscriptionPlan = require("./models/subscription");
+const app = express();
+const subscribtionRoute = require("./Routes/subscriptionPlan");
+const userRoute = require("./Routes/user.routes");
+// const { supplierRoutes } = require("./routes/supplierRoutes");
 //const { bodyParser } = require("body-parser");
 // app.js
-const express = require('express');
-const mongoose = require('mongoose');
-const bodyParser = require('body-parser');
-const session = require('express-session');
+// const express = require('express');
 
-const app = express();
+// const bodyParser = require('body-parser');
+// const session = require('express-session');
+
+
 //app.use(bodyParser.json());
 
 app.get("/", (req, res) => {
@@ -31,7 +34,8 @@ app.get("/", (req, res) => {
 });
 
 //app.use("/api/suppliers", supplierRoutes);
-
+app.use("/",subscribtionRoute);
+app.use("/user",userRoute);
 mongoose
   .connect(mondoDBURL)
   .then(() => {
