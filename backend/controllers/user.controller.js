@@ -1,6 +1,6 @@
 const User = require('../models/user.model');
 
-exports.addUser = async (req, res) => {
+addUser = async (req, res) => {
   const { username, password } = req.body;
 
   if (!username || !password) {

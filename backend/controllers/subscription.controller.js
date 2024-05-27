@@ -44,27 +44,7 @@ const viewSubscriptionDetails = async (req, res) => {
 
 // session.controller.js
 
-const Session = require('../models/trialsession');
 
-exports.startTrialSession = async (req, res) => {
-  const { userId, subscriptionPlanId } = req.body;
-
-  try {
-    // Vérifier si l'utilisateur a une session d'essai active
-    const activeSession = await Session.findOne({ userId: userId, endTime: null });
-    if (activeSession) {
-      return res.status(400).json({ message: 'L\'utilisateur a déjà une session d\'essai active.' });
-    }
-
-    // Créer une nouvelle session
-    const newSession = new Session({ userId, subscriptionPlanId });
-    await newSession.save();
-
-    res.status(201).json({ message: 'Session d\'essai démarrée avec succès.', session: newSession });
-  } catch (error) {
-    res.status(500).json({ message: 'Erreur du serveur', error });
-  }
-};
 // viewSubscriptionDetails = async (req, res) => {
 //   const name = req.body;
 //   try {

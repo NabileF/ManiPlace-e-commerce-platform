@@ -5,6 +5,7 @@ const SubscriptionPlan = require("./models/subscription");
 const app = express();
 const subscribtionRoute = require("./Routes/subscriptionPlan");
 const userRoute = require("./Routes/user.routes");
+const sessionTrial = require("./Routes/session.routes");
 // const { supplierRoutes } = require("./routes/supplierRoutes");
 //const { bodyParser } = require("body-parser");
 // app.js
@@ -36,6 +37,7 @@ app.get("/", (req, res) => {
 //app.use("/api/suppliers", supplierRoutes);
 app.use("/",subscribtionRoute);
 app.use("/user",userRoute);
+app.use("/",sessionTrial);
 mongoose
   .connect(mondoDBURL)
   .then(() => {
