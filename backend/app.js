@@ -1,9 +1,10 @@
 const express = require("express");
 const { PORT, mondoDBURL } = require("./config");
 const mongoose = require("mongoose");
-const SubscriptionPlan = require("./models/subscription.models");
+const SubscriptionPlan = require("./models/subscription");
 const app = express();
-const subscribtionRoute = require("./Routes/subscription.routes");
+const subscribtionRoute = require("./Routes/subscriptionPlan");
+const userRoute = require("./Routes/user.routes");
 // const { supplierRoutes } = require("./routes/supplierRoutes");
 //const { bodyParser } = require("body-parser");
 // app.js
@@ -34,7 +35,7 @@ app.get("/", (req, res) => {
 
 //app.use("/api/suppliers", supplierRoutes);
 app.use("/",subscribtionRoute);
-
+app.use("/user",userRoute);
 mongoose
   .connect(mondoDBURL)
   .then(() => {
@@ -45,5 +46,7 @@ mongoose
   })
   .catch((err) => {
     console.log(err);
+
   });
+
 

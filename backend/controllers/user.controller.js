@@ -1,17 +1,25 @@
-// controllers/userController.js
-const User = require('../models/User');
+const User = require('../models/user.model');
 
-exports.createUser = async (req, res) => {
+exports.addUser = async (req, res) => {
+  const { username, password } = req.body;
+
+  if (!username || !password) {
+    return res.status(400).json({ message: 'Le nom d\'utilisateur et le mot de passe sont requis.' });
+  }
+
   try {
-    const { name, role } = req.body;
-    if (!['buyer', 'wholesaler', 'manufacturer'].includes(role)) {
-      return res.status(400).json({ message: 'Invalid role' });
+    const existingUser = await User.findOne({ username });
+    if (existingUser) {
+      return res.status(400).json({ message: 'Le nom d\'utilisateur est déjà pris.' });
     }
-    const newUser = await User.create({ name, role });
-    res.status(201).json(newUser);
+
+    const newUser = new User({ username, password });
+    await newUser.save();
+
+    res.status(201).json({ message: 'Utilisateur créé avec succès.', user: newUser });
   } catch (error) {
-    res.status(400).json({ message: error.message });
+    res.status(500).json({ message: 'Erreur du serveur', error });
   }
 };
 
-// Add other controller actions for users (e.g., updateUser, deleteUser, etc.)
+module.exports={addUser}
