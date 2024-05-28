@@ -1,7 +1,7 @@
 const express = require("express");
 const { PORT, mondoDBURL } = require("./config");
 const mongoose = require("mongoose");
-const SubscriptionPlan = require("./models/subscription");
+const SubscriptionPlan = require("./models/subscription.models");
 const app = express();
 const subscribtionRoute = require("./Routes/subscriptionPlan");
 const userRoute = require("./Routes/user.routes");
@@ -16,6 +16,7 @@ const sessionTrial = require("./Routes/session.routes");
 
 
 //app.use(bodyParser.json());
+app.use(express.json());
 
 app.get("/", (req, res) => {
   //return res.status(234).send("Welcome to our project!");

@@ -1,35 +1,87 @@
 const mongoose = require("mongoose");
-const { Schema } = mongoose;
+const bcrypt = require("bcrypt");
 
-const SupplierSchema = new Schema({
-  supplierId: { type: String, required: true, unique: true },
-  companyName: { type: String, required: true },
-  companyAddress: { type: String, required: true },
-  businessType: { type: String, required: true, enum: ['Manufacturer', 'Wholesaler', 'Retailer'] },
+//Declare the schema of the Mongo model
+const supplierSchema = new mongoose.Schema({
+  supplierId: { 
+    type: String, 
+    required: true 
+  },
+  companyName: { 
+    type: String, 
+    required: true 
+  },
+  companyAddress: { 
+    type: String, 
+    required: true 
+  },
+  businessType: { 
+    type: String,
+     required: true },
   contactPerson: { type: String, required: true },
-  emailAddress: { type: String, required: true, unique: true, match: /^[^\s@]+@[^\s@]+\.[^\s@]+$/ },
-  phoneNumber: { type: String, required: true, match: /^\+?[1-9]\d{1,14}$/ },
+  emailAddress: { type: String, required: true },
+  phoneNumber: { type: String, required: true },
   password: { type: String, required: true },
-  identificationStatus: { type: String, required: true, enum: ['pending', 'verified', 'rejected'] },
-  selectedPlanId: { type: Schema.Types.ObjectId, ref: "Plan", required: false },
-  managedProducts: [{ type: Schema.Types.ObjectId, ref: "Product" }],
-  productManager: { type: Schema.Types.ObjectId, ref: "ProductManager", required: false },
-  pricingTiers: [{ type: Schema.Types.ObjectId, ref: "PricingTier", required: false }],
-  productVariations: [{ type: Schema.Types.ObjectId, ref: "ProductVariation", required: false }],
-  managedOrders: [{ type: Schema.Types.ObjectId, ref: "BulkOrder", required: false }],
-  negotiationHistory: [{ type: Schema.Types.ObjectId, ref: "Negotiation", required: false }],
-  analyticsDashboard: { type: Schema.Types.ObjectId, ref: "AnalyticsDashboard", required: false },
-  marketingCampaigns: [String],
-  sponsoredProductShowcases: [{ type: Schema.Types.ObjectId, ref: "SponsoredProductShowcase", required: false }],
-  featuredListings: [String],
-  trialPlans: [
+  identificationStatus: { type: String,     enum: ['Manufacturer', 'Wholesaler'],
+  required: true },
+  selectedPlanId: { type: String, required: false },
+  managedProducts: [{ type: mongoose.Schema.Types.ObjectId, ref: "Product" }],
+  productManager: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "ProductManager",
+    required: false,
+  },
+  pricingTiers: [
     {
-      planId: { type: String, required: true },
-      startDate: { type: Date, required: true },
-      isActive: { type: Boolean, required: true },
-      endDate: { type: Date, required: true },
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "PricingTier",
+      required: false,
     },
   ],
+  productVariations: [
+    {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "ProductVariation",
+      required: false,
+    },
+  ],
+  managedOrders: [
+    { type: mongoose.Schema.Types.ObjectId, ref: "BulkOrder", required: false },
+  ],
+  negotiationHistory: [
+    {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Negotiation",
+      required: false,
+    },
+  ],
+  analyticsDashboard: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "AnalyticsDashboard",
+    required: false,
+  },
+  marketingCampaigns: [String],
+  sponsoredProductShowcases: [
+    {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "SponsoredProductShowcase",
+      required: false,
+    },
+  ],
+  featuredListings: [String],
+  isAdmin:{type: String, default: "supplier"}
 });
 
-module.exports = mongoose.model("Supplier", SupplierSchema);
+// Encrypting Password with Bcrypt
+supplierSchema.pre('save', async function (next) {
+  const salt = await bcrypt.genSalt(10);
+  this.password = await bcrypt.hash(this.password, salt);
+});
+
+// Creating login functionality with password verification
+supplierSchema.methods.isPasswordMatched = async function (enteredPassword) {
+  return await bcrypt.compare(enteredPassword, this.password);
+};
+
+//export the model
+module.exports = mongoose.model("Supplier", supplierSchema);

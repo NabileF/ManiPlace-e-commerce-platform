@@ -1,74 +1,81 @@
-const Supplier = require("../models/supplier");
-const SubscriptionPlan = require("../models/SubscriptionPlan");
+const { generateKey } = require('crypto');
+const Supplier = require('../models/supplierModel');
+const asyncHandler = require('express-async-handler');
 
-// Start Trial
-exports.startTrial = async (req, res) => {
-  const { supplierId } = req.params;
-  const { planId } = req.body;
-
-  try {
-    const plan = await SubscriptionPlan.findOne({ planId });
-    const supplier = await Supplier.findOne({ supplierId });
-
-    if (plan && supplier) {
-      const trialPlan = {
-        planId,
-        startDate: new Date(),
-        isActive: true,
-        endDate: new Date(Date.now() + plan.trialDays * 24 * 60 * 60 * 1000),
-      };
-
-      supplier.trialPlans.push(trialPlan);
-      await supplier.save();
-      res.status(200).json({ message: "Trial started successfully" });
-    } else {
-      res.status(400).json({ message: "Invalid supplier or plan" });
-    }
-  } catch (error) {
-    res.status(500).json({ message: "Server error", error });
-  }
-};
-
-// Stop Trial
-exports.stopTrial = async (req, res) => {
-  const { supplierId } = req.params;
-  const { planId } = req.body;
-
-  try {
-    const supplier = await Supplier.findOne({ supplierId });
-    if (supplier) {
-      const trialPlan = supplier.trialPlans.find(
-        (plan) => plan.planId === planId
-      );
-      if (trialPlan) {
-        trialPlan.isActive = false;
-        trialPlan.endDate = new Date();
-        await supplier.save();
-        res.status(200).json({ message: "Trial stopped successfully" });
-      } else {
-        res.status(400).json({ message: "Trial plan not found" });
+const createSupplier = asyncHandler(async (req, res) => {
+        // check if user is already existing
+      const emailAddress = req.body.emailAddress;
+      
+      const findSupplier = await Supplier.findOne({emailAddress: emailAddress});
+      if (!findSupplier) {
+        // create new supplier
+        const newSupplier = await Supplier.create(req.body);
+        res.json(newSupplier);
       }
-    } else {
-      res.status(400).json({ message: "Invalid supplier" });
+      else {
+        // user is already existing
+           throw new Error('User already exists')
+        
+      }    
+});
+
+const loginSupplierCtrl = asyncHandler(async (req, res) => {
+    const { emailAddress, password } = req.body; 
+    // check if user is already existing
+    const findSupplier = await Supplier.findOne({emailAddress});
+    if (findSupplier && ( await findSupplier.isPasswordMatched(password))) {
+      res.json({
+        _id: findSupplier?._id,
+        companyName: findSupplier?.companyName,
+        companyAddress: findSupplier?.companyAddress,
+        businessType: findSupplier?.businessType,
+        contactPerson: findSupplier?.contactPerson,
+        emailAddress: findSupplier.emailAddress,
+        phoneNumber: findSupplier.phoneNumber,
+        token: generateToken(findSupplier?._id),
+      });
     }
-  } catch (error) {
-    res.status(500).json({ message: "Server error", error });
-  }
-};
-
-// Get Active Trials
-exports.getActiveTrials = async (req, res) => {
-  const { supplierId } = req.params;
-
+    else {
+        throw new Error('invalid credentials');
+      }
+      
+    
+});
+// get all supplioers
+const getAllSuppliers = asyncHandler( async(req, res) => {
   try {
-    const supplier = await Supplier.findOne({ supplierId });
-    if (supplier) {
-      const activeTrials = supplier.trialPlans.filter((plan) => plan.isActive);
-      res.status(200).json(activeTrials);
-    } else {
-      res.status(400).json({ message: "Invalid supplier" });
-    }
-  } catch (error) {
-    res.status(500).json({ message: "Server error", error });
+    const getSuppliers = await Supplier.find();
+    res.json(getSuppliers);
   }
-};
+  catch (err) {
+    throw new Error(error);
+  }
+});
+
+// get a single supplier
+
+const getaSupplier = asyncHandler( async(req, res) => {
+  const { id } = req.params;
+  try{
+    const getaSupplier = await Supplier.findById( id );
+    res.json({
+      getaSupplier,
+    });
+  }catch (err) {
+    throw new Error(error);
+  }
+});
+
+module.exports = {createSupplier, loginSupplierCtrl, getAllSuppliers, getaSupplier};
+ 
+
+
+
+
+
+
+
+
+
+
+
