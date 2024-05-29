@@ -1,5 +1,6 @@
 const Session = require('../models/trialsession');
 const suppliers = require('../models/supplier');
+const 
 
 
 
@@ -8,6 +9,7 @@ startTrialSession = async (req, res) => {
   console.log('hello world');
   const supplierId = req.body.supplierId;
   const subscriptionPlanId  = req.body.subscriptionPlanId;
+  console.log('subId', subscriptionPlanId);
   try {
     // Vérifier si l'utilisateur a une session d'essai active
     const activeSession = await Session.findOne({ supplierId:supplierId, endTime: null, paused: false });

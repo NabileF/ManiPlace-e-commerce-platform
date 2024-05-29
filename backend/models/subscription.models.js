@@ -14,7 +14,7 @@ const subscriptionPlanSchema = new mongoose.Schema({
 
 const SubscriptionPlan = mongoose.model('SubscriptionPlan', subscriptionPlanSchema);
 
-// Define unique plans with their own properties
+Define unique plans with their own properties
 const plans = [
   {
     name: 'standard',
@@ -53,5 +53,5 @@ async function initializePlans() {
 initializePlans();
 
 
-module.exports = { SubscriptionPlan, initializePlans};
+module.exports = { SubscriptionPlan};
 
