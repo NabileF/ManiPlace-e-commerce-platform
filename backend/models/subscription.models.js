@@ -1,5 +1,4 @@
 
-
 const mongoose = require('mongoose');
 
 const subscriptionPlanSchema = new mongoose.Schema({
@@ -16,7 +15,7 @@ const subscriptionPlanSchema = new mongoose.Schema({
 
 const SubscriptionPlan = mongoose.model('SubscriptionPlan', subscriptionPlanSchema);
 
-Define unique plans with their own properties
+
 const plans = [
   {
     name: 'standard',
