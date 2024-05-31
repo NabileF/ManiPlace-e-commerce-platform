@@ -1,34 +1,20 @@
 const mongoose = require("mongoose");
-const bcrypt = require("bcrypt");
 
-//Declare the schema of the Mongo model
-const supplierSchema = new mongoose.Schema({
-   
-  
-  companyName: { 
-    type: String, 
-    required: true 
-  },
-  companyAddress: { 
-    type: String, 
-    required: true 
-  },
-  businessType: { 
-    type: String,
-     required: true },
+const SupplierSchema = new mongoose.Schema({
+  // supplierId: { type: String, required: true },
+  companyName: { type: String, required: true },
+  companyAddress: { type: String, required: true },
+  businessType: { type: String, required: true },
   contactPerson: { type: String, required: true },
   emailAddress: { type: String, required: true },
   phoneNumber: { type: String, required: true },
   password: { type: String, required: true },
-  identificationStatus: { type: String,     enum: ['Manufacturer', 'Wholesaler'],
-  required: true },
-  selectedPlanId: { type: mongoose.Schema.Types.ObjectId, ref:"subscriptionPlan", required: false },
+  subscription: { type: mongoose.Schema.Types.ObjectId, ref: 'SubscriptionPlan', required: true },
+  identificationStatus: { type: String, required: true },
+  selectedPlanId: { type: String, required: false },
+  trialSessions: [{ type: mongoose.Schema.Types.ObjectId, ref: 'TrialSession' }],
   managedProducts: [{ type: mongoose.Schema.Types.ObjectId, ref: "Product" }],
-  /*productManager: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: "ProductManager",
-    required: false,
-  },*/
+  productManager: { type: mongoose.Schema.Types.ObjectId, ref: "ProductManager", required: false,},
   pricingTiers: [
     {
       type: mongoose.Schema.Types.ObjectId,
@@ -66,19 +52,15 @@ const supplierSchema = new mongoose.Schema({
       required: false,
     },
   ],
-  featuredListings: [String]
+  featuredListings: [String],
+  // trialPlans: [
+  //   {
+  //     planId: { type: String, required: true },
+  //     startDate: { type: Date, required: true },
+  //     isActive: { type: Boolean, required: true },
+  //     endDate: { type: Date, required: true },
+  //   },
+  //],
 });
 
-// Encrypting Password with Bcrypt
-supplierSchema.pre('save', async function (next) {
-  const salt = await bcrypt.genSalt(10);
-  this.password = await bcrypt.hash(this.password, salt);
-});
-
-// Creating login functionality with password verification
-supplierSchema.methods.isPasswordMatched = async function (enteredPassword) {
-  return await bcrypt.compare(enteredPassword, this.password);
-};
-
-//export the model
-module.exports = mongoose.model("Supplier", supplierSchema);
+module.exports = mongoose.model("Supplier", SupplierSchema);
