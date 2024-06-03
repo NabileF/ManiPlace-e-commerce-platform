@@ -1,24 +1,26 @@
-import express from 'express';
-import { PORT, mondoDBURL } from './config.js';
-import mongoose from 'mongoose';
+const express = require("express");
+const bodyParser = require("body-parser");
+const { PORT, mondoDBURL } = require("./config");
+const subscriptionroute=require("./routes/SubscriptionRoutes")
+
+const mongoose = require("mongoose");
+
 
 const app = express();
+app.use(express.json());
+app.use(bodyParser.urlencoded({ extended: true }));
 
-app.get('/', (req, res) => {
-  console.log(req);
-  return res.status(234).send('Welcome to our project!')
-});
 
+app.use("/",subscriptionroute);
 
 mongoose
   .connect(mondoDBURL)
-    .then(() => {
-      console.log('app connected to database');
-      app.listen(PORT, () => {
-        console.log(`Server is running on port ${PORT}`);
-       });
-     
-    })
-    .catch(err => {
-      console.log(err);
+  .then(() => {
+    console.log("app connected to database");
+    app.listen(PORT, () => {
+      console.log(`Server is running on port ${PORT}`);
     });
+  })
+  .catch((err) => {
+    console.log(err);
+  });

@@ -9,7 +9,7 @@ const SupplierSchema = new mongoose.Schema({
   emailAddress: { type: String, required: true },
   phoneNumber: { type: String, required: true },
   password: { type: String, required: true },
-  subscription: { type: mongoose.Schema.Types.ObjectId, ref: 'SubscriptionPlan', required: true },
+  subscription: { type: mongoose.Schema.Types.ObjectId, ref: 'SubscriptionPlan', required: false },
   identificationStatus: { type: String, required: true },
   selectedPlanId: { type: String, required: false },
   trialSessions: [{ type: mongoose.Schema.Types.ObjectId, ref: 'TrialSession' }],
