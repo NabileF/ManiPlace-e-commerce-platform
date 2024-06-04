@@ -6,7 +6,7 @@ const authRouter = require("./routes/authRoute");
 const bodyParser = require("body-parser");
 const { NOTFOUND } = require("dns");
 const { notFound, errorHandler } = require("./middlewares/errorHandler");
-const productRouter = require('./routes/productRoute');
+
 
 
 const app = express(); 
@@ -14,7 +14,7 @@ const app = express();
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extends: false}));
 app.use("/api/user", authRouter);
-app.use('/api/products', productRouter);
+
 
 
 app.use(notFound);

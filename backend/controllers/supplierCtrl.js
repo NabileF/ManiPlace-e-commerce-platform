@@ -1,5 +1,5 @@
 const { generateKey } = require('crypto');
-const Supplier = require('../models/supplierModel');
+const Supplier = require('../models/supplier.models');
 const asyncHandler = require('express-async-handler');
 
 const createSupplier = asyncHandler(async (req, res) => {

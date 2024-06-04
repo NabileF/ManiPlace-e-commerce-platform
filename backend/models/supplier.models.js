@@ -69,7 +69,7 @@ const supplierSchema = new mongoose.Schema({
     },
   ],
   featuredListings: [String],
-  isAdmin:{type: String, default: "supplier"}
+  
 });
 
 // Encrypting Password with Bcrypt
