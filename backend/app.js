@@ -1,36 +1,17 @@
 const express = require("express");
+const bodyParser = require("body-parser");
 const { PORT, mondoDBURL } = require("./config");
+const subscriptionroute=require("./routes/SubscriptionRoutes")
+
 const mongoose = require("mongoose");
-const SubscriptionPlan = require("./models/SubscriptionPlan");
-const { supplierRoutes } = require("./routes/supplierRoutes");
-//const { bodyParser } = require("body-parser");
-// app.js
-const express = require('express');
-const mongoose = require('mongoose');
-const bodyParser = require('body-parser');
-const session = require('express-session');
+
 
 const app = express();
-//app.use(bodyParser.json());
+app.use(express.json());
+app.use(bodyParser.urlencoded({ extended: true }));
 
-app.get("/", (req, res) => {
-  //return res.status(234).send("Welcome to our project!");
-  const newSubscriptionPlan = new SubscriptionPlan({
-    planId: "001",
-    name: "Premium plan",
-    price: 1500,
-    features: ["feature 1", "feature 2"],
-    accessLevel: "full Access",
-    trialDays: 4,
-  });
 
-  newSubscriptionPlan
-    .save()
-    .then(() => res.status(200).json(newSubscriptionPlan))
-    .catch((err) => console.log(err));
-});
-
-//app.use("/api/suppliers", supplierRoutes);
+app.use("/",subscriptionroute);
 
 mongoose
   .connect(mondoDBURL)
