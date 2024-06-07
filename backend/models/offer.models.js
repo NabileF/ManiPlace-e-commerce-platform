@@ -2,7 +2,7 @@ const mongoose = require('mongoose');
 
 const offerSchema = new mongoose.Schema({
   supplier_id: { type: mongoose.Schema.Types.ObjectId, ref: 'Supplier', required: true },
-  pricing_model_id: { type: mongoose.Schema.Types.ObjectId, ref: 'PricingModel', required: true },
+  pricing_model_id: { type: mongoose.Schema.Types.ObjectId, ref: 'PricingTier', required: true },
   base_price: { type: Number, required: true },
   product_details: {
     product_id: { type: mongoose.Schema.Types.ObjectId, ref: 'Product', required: true },
