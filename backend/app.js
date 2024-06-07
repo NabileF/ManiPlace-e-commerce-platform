@@ -2,6 +2,11 @@ const express = require("express");
 const bodyParser = require("body-parser");
 const { PORT, mondoDBURL } = require("./config");
 const subscriptionroute=require("./routes/SubscriptionRoutes")
+const negotiationroute=require("./routes/NegotiationRoutes")
+app.use("/negotiation", negotiationroute)
+
+const offerroute = require("./routes/OfferRoutes")
+app.use("/offer", offerroute )
 
 const mongoose = require("mongoose");
 
