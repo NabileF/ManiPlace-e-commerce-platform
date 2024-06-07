@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const subscription = require('../controllers/subscriptionController'); 
+const subscription = require('../controllers/subscriptionPlan'); 
 
 // Routes
 
