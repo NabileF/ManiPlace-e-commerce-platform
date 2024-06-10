@@ -1,7 +1,7 @@
 const express = require("express");
 const bodyParser = require("body-parser");
 const { PORT, mondoDBURL } = require("./config");
-const subscriptionroute=require("./routes/SubscriptionRoutes")
+const supplierIdentification = require("./Routes/authRoutes");
 
 const mongoose = require("mongoose");
 
@@ -11,7 +11,7 @@ app.use(express.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
 
-app.use("/",subscriptionroute);
+// app.use("/",subscriptionroute);
 
 mongoose
   .connect(mondoDBURL)
