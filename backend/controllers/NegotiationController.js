@@ -44,6 +44,38 @@ const updateNegotiation = async (req, res) => {
   }
 };
 
+const addMessage = async (req, res) => {
+  try {
+    const { sender, senderType, content } = req.body;
+
+    const negotiation = await Negotiation.findById(req.params.id);
+    if (!negotiation) {
+      return res.status(404).json({ message: 'Negotiation not found' });
+    }
+
+    negotiation.messages.push({ sender, senderType, content, timestamp: new Date() });
+    negotiation.updatedAt = Date.now();
+
+    await negotiation.save();
+    res.json(negotiation);
+  } catch (error) {
+    res.status(400).json({ message: error.message });
+  }
+};
+
+const getMessages = async (req, res) => {
+  try {
+    const negotiation = await Negotiation.findById(req.params.id);
+
+    if (!negotiation) {
+      return res.status(404).json({ message: 'Negotiation not found' });
+    }
+
+    res.json(negotiation.messages);
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
 
 const deleteNegotiation = async (req, res) => {
   try {
@@ -62,6 +94,8 @@ module.exports = {
   getAllNegotiations,
   getNegotiationById,
   updateNegotiation,
+  addMessage,
+  getMessages,
   deleteNegotiation,
 
 };

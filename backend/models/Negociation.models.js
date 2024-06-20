@@ -18,7 +18,8 @@ const negotiationSchema = new mongoose.Schema({
   },
   messages: [
     {
-       sender: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
+      sender: { type: mongoose.Schema.Types.ObjectId, required: true },
+      senderType: { type: String, enum: ['Buyer', 'Supplier'], required: true },
       content: String,
       timestamp: Date
     }
