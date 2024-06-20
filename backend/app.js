@@ -2,6 +2,8 @@ const express = require("express");
 const bodyParser = require("body-parser");
 const { PORT, mondoDBURL } = require("./config");
 const subscriptionroute=require("./routes/SubscriptionRoutes");
+const authRoutes = require('./routes/authRoutes');
+const bulkOrderRoutes = require('./routes/bulkOrderRoutes');
 
 
 const mongoose = require("mongoose");
@@ -13,6 +15,9 @@ app.use(bodyParser.urlencoded({ extended: true }));
 
 
 app.use("/",subscriptionroute);
+app.use('/auth', authRoutes);
+app.use('/bulk-orders', bulkOrderRoutes);
+
 
 mongoose
   .connect(mondoDBURL)
