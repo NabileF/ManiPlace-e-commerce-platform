@@ -1,5 +1,4 @@
-const asyncHandler = require('express-async-handler');
-const Supplier = require('../models/Supplier'); // Adjust the path as per your file structure
+const Supplier = require('./models/supplier');
 
 const ProfileFormInput = asyncHandler(async (req, res) => {
     const { emailAddress, identificationStatus } = req.body;

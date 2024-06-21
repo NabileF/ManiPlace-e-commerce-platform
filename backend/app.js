@@ -1,7 +1,7 @@
 const express = require('express');
 const bodyParser = require('body-parser');
 const { PORT, mongoDBURL } = require('./config');
-const supplierIdentificationRoute = require('./routes/supplierIdentification.routes');
+const supplierIdentificationRoute = require('./Routes/supplierIdentification.routes');
 const mongoose = require('mongoose');
 
 const app = express();

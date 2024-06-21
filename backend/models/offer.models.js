@@ -1,18 +1,58 @@
 const mongoose = require('mongoose');
 
-const offerSchema = new mongoose.Schema({
-  supplier_id: { type: mongoose.Schema.Types.ObjectId, ref: 'Supplier', required: true },
-  pricing_model_id: { type: mongoose.Schema.Types.ObjectId, ref: 'PricingModel', required: true },
-  base_price: { type: Number, required: true },
-  product_details: {
-    product_id: { type: mongoose.Schema.Types.ObjectId, ref: 'Product', required: true },
-    product_name: { type: String, required: true }
+const OfferSchema = new mongoose.Schema ({
+  supplierId: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'Supplier',
+    required: true
   },
-  created_at: { type: Date, default: Date.now },
-  updated_at: { type: Date, default: Date.now }
+
+  pricingModelId: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'PricingModel',
+    required: true
+  },
+  basePrice: {
+    type: Number,
+    required: true
+  },
+  discountTiers: [
+    {
+      orderQuantity: {
+        type: Number,
+        required: true
+      },
+      discountPercentage: {
+        type: Number,
+        required: true
+      }
+    }
+  ],
+  structuredOffer: {
+    description: {
+      type: String,
+      required: true
+    },
+    details: {
+      basePrice: {
+        type: Number,
+        required: true
+      },
+      tiers: [
+        {
+          quantity: {
+            type: Number,
+            required: true
+          },
+          discount: {
+            type: Number,
+            required: true
+          }
+        }
+      ]
+    }
+  }
 });
 
-
-const Offer = mongoose.model('Offer', offerSchema);
-
-module.exports =  Offer ;
+const Offer = mongoose.model('Offer', OfferSchema);
+module.exports = Offer;
