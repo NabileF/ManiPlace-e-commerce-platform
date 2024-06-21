@@ -45,4 +45,3 @@ const negotiationSchema = new mongoose.Schema({
 const Negotiation = mongoose.model('Negotiation', negotiationSchema);
 
 module.exports = Negotiation ;
-
