@@ -9,8 +9,6 @@ router.post('/' ,protect, createBulkOrder);
 router.post('/batch-process' ,protect, batchProcessOrders);
 router.put('/:orderId/status' ,protect, updateOrderStatus);
 router.put('/:orderId/cancel' ,protect, cancelOrder);
-router.post('/negotiate', protect, negotiateOrder);
-router.post('/update-workflow-stage', updateWorkflowStage);
 router.put('/:orderId/reject', protect, rejectOrder);
 
 
