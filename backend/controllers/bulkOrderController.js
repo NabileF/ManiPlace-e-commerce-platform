@@ -20,16 +20,24 @@ const getBulkOrders = async (req, res) => {
 
 // Create a new bulk order
 const createBulkOrder = async (req, res) => {
-  const { orderDetails, buyerId, requestedDeliveryDate } = req.body;
+  const { products, buyerId, requestedDeliveryDate } = req.body;
 
   try {
+    const productEntries = await Promise.all(products.map(async ({ productName, quantity }) => {
+      const product = await Product.findOne({ name: productName });
+      if (!product) {
+        throw new Error(`Product not found: ${productName}`);
+      }
+      return {
+        product: product._id,
+        quantity
+      };
+    }));
+
     const newBulkOrder = new BulkOrder({
       supplier: req.supplier.id,
-      orderDetails: orderDetails.map(detail => ({
-        productName: detail.productName,
-        quantity: detail.quantity
-      })),
       buyer: buyerId,
+      products: productEntries,
       requestedDeliveryDate,
     });
 
@@ -37,7 +45,7 @@ const createBulkOrder = async (req, res) => {
     res.status(201).json(savedBulkOrder);
   } catch (error) {
     console.error(error);
-    res.status(500).json({ message: 'Server Error' });
+    res.status(500).json({ message: 'Server Error', error: error.message });
   }
 };
 
@@ -113,72 +121,6 @@ const cancelOrder = async (req, res) => {
   }
 };
 
-// Negotiation tools handler
-const negotiateOrder = async (req, res) => {
-  const { orderId, newTerms } = req.body;
-
-  try {
-    const order = await BulkOrder.findById(orderId);
-
-    if (!order) {
-      return res.status(404).json({ message: 'Order not found' });
-    }
-
-    const { pricing, orderDetails, deliveryTerms } = newTerms;
-    if (pricing) order.pricing = pricing;
-    if (orderDetails) {
-      order.orderDetails = orderDetails.map(detail => ({
-        productName: detail.productName,
-        quantity: detail.quantity
-      }));
-    }
-    if (deliveryTerms) order.deliveryTerms = deliveryTerms;
-
-    // Record the negotiation history
-    if (!order.negotiationHistory) order.negotiationHistory = [];
-    order.negotiationHistory.push({
-      date: Date.now(),
-      changes: newTerms,
-      updatedBy: req.supplier.id
-    });
-
-    await order.save();
-
-    res.status(200).json({ message: 'Order terms updated and negotiated successfully', order });
-  } catch (error) {
-    console.error(error);
-    res.status(500).json({ message: 'Server Error' });
-  }
-};
-
-// Update workflow stage
-const updateWorkflowStage = async (req, res) => {
-  const { orderId, stage } = req.body;
-
-  try {
-    const order = await BulkOrder.findById(orderId);
-
-    if (!order) {
-      return res.status(404).json({ message: 'Order not found' });
-    }
-
-    const currentStage = order.workflowStages.find(s => s.stage === stage);
-    if (currentStage) {
-      currentStage.completed = true;
-      currentStage.updatedAt = Date.now();
-    } else {
-      order.workflowStages.push({ stage, completed: true, updatedAt: Date.now() });
-    }
-
-    await order.save();
-
-    res.status(200).json({ message: 'Workflow stage updated successfully', order });
-  } catch (error) {
-    console.error(error);
-    res.status(500).json({ message: 'Server Error' });
-  }
-};
-
 // Order Rejection
 const rejectOrder = async (req, res) => {
   const { orderId, rejectionReason } = req.body;
@@ -212,7 +154,5 @@ module.exports = {
   batchProcessOrders, 
   updateOrderStatus, 
   cancelOrder, 
-  negotiateOrder, 
-  updateWorkflowStage,
   rejectOrder
 };
