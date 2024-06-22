@@ -5,6 +5,10 @@ const subscriptionroute=require("./routes/SubscriptionRoutes");
 const authRoutes = require('./routes/authRoutes');
 const bulkOrderRoutes = require('./routes/bulkOrderRoutes');
 
+const contractroute=require("./routes/ContractRoutes");
+const negotiationroute=require("./routes/NegotiationRoutes");
+const offerroute=require("./routes/OfferRoutes");
+const pricingmodelroute=require("./routes/PricingModelRoutes");
 
 const mongoose = require("mongoose");
 
@@ -18,6 +22,10 @@ app.use("/",subscriptionroute);
 app.use('/auth', authRoutes);
 app.use('/bulk-orders', bulkOrderRoutes);
 
+app.use("/contract",contractroute);
+app.use("/negotiation",negotiationroute);
+app.use("/offer",offerroute);
+app.use("/pricingmodel",pricingmodelroute);
 
 mongoose
   .connect(mondoDBURL)
