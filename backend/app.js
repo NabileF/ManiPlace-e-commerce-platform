@@ -10,6 +10,10 @@ const negotiationroute=require("./routes/NegotiationRoutes");
 const offerroute=require("./routes/OfferRoutes");
 const pricingmodelroute=require("./routes/PricingModelRoutes");
 
+const dotenv = require("dotenv").config(); // Corrected dotenv configuration
+const supplierRoutes = require('./routes/supplierRoutes');
+
+
 const mongoose = require("mongoose");
 
 
@@ -26,6 +30,9 @@ app.use("/contract",contractroute);
 app.use("/negotiation",negotiationroute);
 app.use("/offer",offerroute);
 app.use("/pricingmodel",pricingmodelroute);
+
+app.use('/supplier', supplierRoutes); // Added supplier routes
+
 
 mongoose
   .connect(mondoDBURL)
