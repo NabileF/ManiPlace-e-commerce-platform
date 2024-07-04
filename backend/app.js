@@ -5,16 +5,16 @@ const subscriptionroute=require("./routes/SubscriptionRoutes");
 const authRoutes = require('./routes/authRoutes');
 const bulkOrderRoutes = require('./routes/bulkOrderRoutes');
 const productRoutes = require("./Routes/productRoutes")
+const productListingRoutes = require("./routes/productListingRoutes");
 
 
 const contractroute=require("./routes/ContractRoutes");
 const negotiationroute=require("./routes/NegotiationRoutes");
 const offerroute=require("./routes/OfferRoutes");
 const pricingmodelroute=require("./routes/PricingModelRoutes");
-app.use("/", productRoutes)
 
 
-const dotenv = require("dotenv").config(); // Corrected dotenv configuration
+// const dotenv = require("dotenv").config(); // Corrected dotenv configuration
 const supplierRoutes = require('./routes/supplierRoutes');
 
 
@@ -29,6 +29,9 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.use("/",subscriptionroute);
 app.use('/auth', authRoutes);
 app.use('/bulk-orders', bulkOrderRoutes);
+app.use("/productListing", productListingRoutes);
+app.use("/", productRoutes)
+
 
 app.use("/contract",contractroute);
 app.use("/negotiation",negotiationroute);
