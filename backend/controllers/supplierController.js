@@ -74,4 +74,43 @@ const updateSupplierProfile = async (req, res) => {
   }
 };
 
-module.exports = { updateSupplierProfile };
+// Update Product Inventory
+const updateProductInventory = async (req, res) => {
+  const { productId, stockQuantity } = req.body;
+
+  // Validate that stockQuantity is a positive number
+  if (stockQuantity < 0) {
+    return res.status(400).json({ message: 'Invalid stock quantity. Please enter a positive number.' });
+  }
+
+  try {
+    const product = await Product.findById(productId);
+    
+    if (!product) {
+      return res.status(404).json({ message: 'Product not found' });
+    }
+
+    // Check if the product is part of a confirmed order
+    const confirmedOrders = await BulkOrder.find({
+      'products.product': productId,
+      status: 'Confirmed'
+    });
+
+    if (confirmedOrders.length > 0) {
+      return res.status(400).json({ message: 'Cannot update inventory for products in confirmed orders' });
+    }
+
+    // Update the stock quantity
+    product.stockQuantity = stockQuantity;
+    await product.save();
+
+    res.json({ message: 'Inventory updated successfully', product });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: 'Server Error' });
+  }
+};
+
+
+
+module.exports = { updateSupplierProfile, updateProductInventory };
