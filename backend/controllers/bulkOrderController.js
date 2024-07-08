@@ -148,11 +148,46 @@ const rejectOrder = async (req, res) => {
   }
 };
 
+// Confirm an order
+const confirmOrder = async (req, res) => {
+  const { orderId } = req.params;
+
+  try {
+    const order = await BulkOrder.findOneAndUpdate(
+      { _id: orderId, supplier: req.supplier.id },
+      { status: 'Confirmed' },
+      { new: true }
+    );
+
+    if (!order) {
+      return res.status(404).json({ message: 'Order not found' });
+    }
+
+    // Reduce stock for each product in the order
+    for (const productEntry of order.products) {
+      const product = await Product.findById(productEntry.product);
+      if (product.stockQuantity < productEntry.quantity) {
+        return res.status(400).json({ message: `Not enough stock for product: ${product.name}` });
+      }
+      product.stockQuantity -= productEntry.quantity;
+      await product.save();
+    }
+
+    notifyBuyer(order.buyer, `Your order ${orderId} has been confirmed.`);
+
+    res.status(200).json({ message: 'Order confirmed and stock updated successfully', order });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: 'Server Error' });
+  }
+};
+
 module.exports = { 
   getBulkOrders, 
   createBulkOrder, 
   batchProcessOrders, 
   updateOrderStatus, 
   cancelOrder, 
-  rejectOrder
+  rejectOrder,
+  confirmOrder // Export the new function
 };
