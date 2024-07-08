@@ -5,6 +5,7 @@ const Product = require('../models/product.models')
 const { error } = require('console')
 const router = express.Router()
 
+
 // set up multer for file uploads 
 const storage = multer.memoryStorage()
 const upload = multer({ storage: storage })
