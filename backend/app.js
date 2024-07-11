@@ -9,10 +9,10 @@ const productListingRoutes = require("./Routes/productListingRoutes");
 const productRoutes = require('./Routes/productRoutes')
 
 
-const contractroute=require("./Routes/ContractRoutes");
-const negotiationroute=require("./Routes/NegotiationRoutes");
-const offerroute=require("./Routes/OfferRoutes");
-const pricingmodelroute=require("./Routes/PricingModelRoutes");
+const contractroute=require("./routes/ContractRoutes");
+const negotiationroute=require("./routes/NegotiationRoutes");
+const offerroute=require("./routes/OfferRoutes");
+const pricingmodelroute=require("./routes/PricingModelRoutes");
 
 
 // const dotenv = require("dotenv").config(); // Corrected dotenv configuration
